@@ -36,6 +36,27 @@ class MainHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('Hello world!')
 
+
+class createTaskHandler(webapp2.RequestHandler):
+	def get(self):
+		template = jinja_environment.get_template('createTask.html')
+		#todo: write createTask.html template
+		#todo: pass user variables to customize page
+		self.response.write(template.render())
+
+	def post(self):
+		title = self.request.get('title')
+		start = self.request.get('start')
+		end = self.request.get('end')
+		#todo: define str_to_datetime
+		#start, end = str_to_datetime(start), str_to_datetime(end)
+		new_task = Task(title=title, start=start, end=end)
+		task.put()
+		#maybe reply with a success message
+
+
+
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', MainHandler),
+    ('/createTask', createTaskHandler),
 ], debug=True)
