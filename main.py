@@ -18,10 +18,19 @@ import webapp2
 import logging
 import jinja2
 import os
+from google.appengine.ext import ndb
 
 #template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
+class User(ndb.Model):
+	username = ndb.StringProperty()
+	task_ids = ndb.IntegerProperty(repeated=True)
+
+class Task(ndb.Model):
+	title = ndb.StringProperty()
+	start = ndb.DateTimeProperty()
+	end = ndb.DateTimeProperty()
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
