@@ -19,9 +19,12 @@ import logging
 import jinja2
 import os
 from google.appengine.ext import ndb
+from datetime import datetime
 
 #template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+DATE_FORMAT = "%b %d %Y %I:%M%p"
+#eg Jun 1 2005 1:33PM
 
 class User(ndb.Model):
 	username = ndb.StringProperty()
@@ -40,7 +43,6 @@ class MainHandler(webapp2.RequestHandler):
 class createTaskHandler(webapp2.RequestHandler):
 	def get(self):
 		template = jinja_environment.get_template('createTask.html')
-		#todo: write createTask.html template
 		#todo: pass user variables to customize page
 		self.response.write(template.render())
 
@@ -48,10 +50,10 @@ class createTaskHandler(webapp2.RequestHandler):
 		title = self.request.get('title')
 		start = self.request.get('start')
 		end = self.request.get('end')
-		#todo: define str_to_datetime
-		#start, end = str_to_datetime(start), str_to_datetime(end)
+		start = datetime.strptime(start, DATE_FORMAT)
+		end = datetime.strptime(end, DATE_FORMAT)
 		new_task = Task(title=title, start=start, end=end)
-		task.put()
+		new_task.put()
 		#maybe reply with a success message
 
 
