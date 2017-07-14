@@ -24,6 +24,8 @@ from datetime import datetime
 #template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 DATE_FORMAT = "%b %d %Y %I:%M%p"
+BEGINNING_OF_TIME = 'Jan 1 1000 12:01AM'
+
 #eg Jun 1 2005 1:33PM
 
 class User(ndb.Model):
@@ -56,9 +58,22 @@ class createTaskHandler(webapp2.RequestHandler):
 		new_task.put()
 		#maybe reply with a success message
 
-
+class showTasksHandler(webapp2.RequestHandler):
+	def get(self):
+		now = datetime.strftime(datetime.now(), DATE_FORMAT)
+		start = self.request.get('start') or BEGINNING_OF_TIME
+		end = self.request.get('end') or now
+		start = datetime.strptime(start, DATE_FORMAT)
+		end = datetime.strptime(end, DATE_FORMAT)
+		
+		tasks = Task.query(Task.start>start and Task.end<end).fetch()
+		
+		template = jinja_environment.get_template('schedule.html')
+		self.response.write(template.render({'tasks':tasks}))
+		#todo: separate >20 tasks into multiple pages
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/createTask', createTaskHandler),
+    ('/schedule', showTasksHandler),
 ], debug=True)
