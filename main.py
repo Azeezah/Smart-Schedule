@@ -39,7 +39,8 @@ class Task(ndb.Model):
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write('Hello world!')
+		template = jinja_environment.get_template('index.html')
+		self.response.write(template.render())
 
 
 class createTaskHandler(webapp2.RequestHandler):
