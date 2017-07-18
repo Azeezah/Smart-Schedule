@@ -1,10 +1,25 @@
-<ul>
-	{% for task in tasks %}
-		<span class="taskTitle">{{ task.title }}</span>
-		from 
-		<span class="taskStart">{{ task.start }}</span>
-		to
-		<span class="taskEnd">{{ task.end }}</span>
-		<br>
-	{% endfor %}
-</ul>
+<html>
+	<head>
+		<link rel="stylesheet" href="resources/schedule/style.css">
+	</head>
+	<body>
+		<div id="menu">
+			<div id="header">OG ORGANIZER</div>
+			<a>Settings</a>
+			<a>Login</a>
+			<a href="/createTask">New Task</a>
+		</div>
+		<table id="schedule">
+			<th>Task</th>
+			<th>Start</th>
+			<th>End</th>
+			{% for task in tasks %}
+				<tr>
+					<td class="taskTitle">{{ task.title }}</td>
+					<td class="taskStart">{{ task.start }}</td>
+					<td class="taskEnd">{{ task.end }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	</body>
+</html>
