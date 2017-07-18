@@ -23,10 +23,13 @@ from datetime import datetime
 
 #template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
-DATE_FORMAT = "%b %d %Y %I:%M%p"
-BEGINNING_OF_TIME = 'Jan 1 1000 12:01AM'
 
-#eg Jun 1 2005 1:33PM
+#DATE_FORMAT = "%b %d %Y %I:%M%p"
+#BEGINNING_OF_TIME = 'Jan 1 1000 12:01AM'
+
+DATE_FORMAT = "%Y-%m-%dT%H:%M"
+BEGINNING_OF_TIME = '1000-01-01T1:01'
+
 
 class User(ndb.Model):
 	username = ndb.StringProperty()
