@@ -73,8 +73,6 @@ class createTaskHandler(webapp2.RequestHandler):
 
 	def post(self):
 		user = users.get_current_user()
-		if not user:
-			raise users.UnauthorizedException('Authorization required')
 		email = user.email()
 		title = self.request.get('title')
 		start = self.request.get('start')
@@ -88,8 +86,6 @@ class createTaskHandler(webapp2.RequestHandler):
 class showTasksHandler(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
-		if not user:
-			raise users.UnauthorizedException('Authorization required')
 		email = user.email()
 		# now = datetime.strftime(datetime.now(), DATE_FORMAT)
 		# start = self.request.get('start') or BEGINNING_OF_TIME
