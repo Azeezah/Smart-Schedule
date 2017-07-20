@@ -12,7 +12,7 @@
 				{% endif %}
 			</a>
 
-			<a href="/createTask">New Task</a>
+			<a href="javascript:openModal();">New Task</a>
 		</div>
 		<table id="schedule">
 			<th>Task</th>
@@ -26,5 +26,22 @@
 				</tr>
 			{% endfor %}
 		</table>
+		<div id="new_task_popup" class="shadow">
+			<div class="modal-content">
+				<div class="title">
+					<span id="close">&times;</span>
+					<h2>New Task</h2>
+				</div>
+				<div class="popup">
+					<form id="newTaskForm" action="/createTask" method="POST" onsubmit="closeModal(); return false;">
+						Name: <input type="text" name="title"><br>
+						Start: <input id="datetime1" type="datetime-local" name="start"><br>
+						End: <input id="datetime2" type="datetime-local" name="end"><br>
+						<input type="Submit" name="Schedule Task">
+					</form>
+				</div>
+			</div>
+		</div>
+		<script src="/resources/schedule/script.js"></script>
 	</body>
 </html>
