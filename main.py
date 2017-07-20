@@ -20,6 +20,8 @@ import jinja2
 import os
 from google.appengine.ext import ndb
 from datetime import datetime
+from google.appengine.api import users
+import logging
 
 #template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_environment = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
@@ -34,46 +36,80 @@ BEGINNING_OF_TIME = '1000-01-01T1:01'
 class User(ndb.Model):
 	username = ndb.StringProperty()
 	task_ids = ndb.IntegerProperty(repeated=True)
+	email = ndb.StringProperty()
 
 class Task(ndb.Model):
 	title = ndb.StringProperty()
 	start = ndb.DateTimeProperty()
 	end = ndb.DateTimeProperty()
+	email = ndb.StringProperty()
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
 		template = jinja_environment.get_template('index.html')
-		self.response.write(template.render())
+		user = users.get_current_user()
+		if user:
+			account_link = users.create_logout_url('/')
+		else:
+			account_link = users.create_login_url('/')
+		self.response.write(template.render({
+			'account_link':account_link, 
+			'logged_in':bool(user),
+		}))
 
 
 class createTaskHandler(webapp2.RequestHandler):
 	def get(self):
 		template = jinja_environment.get_template('createTask.html')
-		#todo: pass user variables to customize page
-		self.response.write(template.render())
+		user = users.get_current_user()
+		if user:
+			account_link = users.create_logout_url('/')
+		else:
+			account_link = users.create_login_url('/')
+		self.response.write(template.render({
+			'account_link':account_link, 
+			'logged_in':bool(user),
+		}))
 
 	def post(self):
+		user = users.get_current_user()
+		if not user:
+			raise users.UnauthorizedException('Authorization required')
+		email = user.email()
 		title = self.request.get('title')
 		start = self.request.get('start')
 		end = self.request.get('end')
 		start = datetime.strptime(start, DATE_FORMAT)
 		end = datetime.strptime(end, DATE_FORMAT)
-		new_task = Task(title=title, start=start, end=end)
+		new_task = Task(title=title, start=start, end=end, email=email)
 		new_task.put()
 		#maybe reply with a success message
 
 class showTasksHandler(webapp2.RequestHandler):
 	def get(self):
-		now = datetime.strftime(datetime.now(), DATE_FORMAT)
-		start = self.request.get('start') or BEGINNING_OF_TIME
-		end = self.request.get('end') or now
-		start = datetime.strptime(start, DATE_FORMAT)
-		end = datetime.strptime(end, DATE_FORMAT)
-		
-		tasks = Task.query(Task.start>start and Task.end<end).fetch()
+		user = users.get_current_user()
+		if not user:
+			raise users.UnauthorizedException('Authorization required')
+		email = user.email()
+		# now = datetime.strftime(datetime.now(), DATE_FORMAT)
+		# start = self.request.get('start') or BEGINNING_OF_TIME
+		# end = self.request.get('end') or now	#defaults to completed tasks if default end time is now
+		# start = datetime.strptime(start, DATE_FORMAT)
+		# end = datetime.strptime(end, DATE_FORMAT)
+		tasks = Task.query(Task.email==email).fetch()
 		
 		template = jinja_environment.get_template('schedule.html')
-		self.response.write(template.render({'tasks':tasks}))
+		user = users.get_current_user()
+		if user:
+			account_link = users.create_logout_url('/')
+		else:
+			account_link = users.create_login_url('/')
+
+		self.response.write(template.render({
+			'account_link':account_link, 
+			'logged_in':bool(user),
+			'tasks':tasks,
+		}))
 		#todo: separate >20 tasks into multiple pages
 
 app = webapp2.WSGIApplication([

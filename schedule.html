@@ -6,7 +6,12 @@
 		<div id="menu">
 			<div id="header">OG ORGANIZER</div>
 			<a>Settings</a>
-			<a>Login</a>
+			<a href="{{ account_link }}">
+				{% if logged_in %} Logout
+				{% else %} Login
+				{% endif %}
+			</a>
+
 			<a href="/createTask">New Task</a>
 		</div>
 		<table id="schedule">

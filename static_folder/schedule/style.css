@@ -34,6 +34,11 @@ body {
 	background-color: #700070;
 }
 
+#menu a:link, #menu a:visited, #menu a:hover, #menu a:active {
+	text-decoration: none;
+	color: white;
+}
+
 td {
 	text-align: center;
 }

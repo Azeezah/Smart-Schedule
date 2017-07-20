@@ -12,7 +12,11 @@
 			<div id="header">OG ORGANIZER</div>
 			<a>About Us</a>
 			<a>Contact Us</a>
-			<a>Login</a>
+			<a href="{{ account_link }}">
+				{% if logged_in %} Logout
+				{% else %} Login
+				{% endif %}
+			</a>
 		</div>
 		<div id="top">
 			<div id="about">
