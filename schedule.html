@@ -1,18 +1,19 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="resources/schedule/style.css">
+	    <link rel="manifest" href="/resources/settings/manifest.json">
 	</head>
 	<body>
 		<div id="menu">
 			<div id="header">OG ORGANIZER</div>
-			<a>Settings</a>
+			<a href="javascript:openSettingsPopup();">Settings</a>
 			<a href="{{ account_link }}">
 				{% if logged_in %} Logout
 				{% else %} Login
 				{% endif %}
 			</a>
 
-			<a href="javascript:openModal();">New Task</a>
+			<a href="javascript:openNewTaskPopup();">New Task</a>
 		</div>
 		<table id="schedule">
 			<th>Task</th>
@@ -29,7 +30,7 @@
 		<div id="new_task_popup" class="shadow">
 			<div class="modal-content">
 				<div class="title">
-					<span id="close">&times;</span>
+					<span id="close_new_task_popup" class="close">&times;</span>
 					<h2>New Task</h2>
 				</div>
 				<div class="popup">
@@ -39,6 +40,24 @@
 						End: <input id="datetime2" type="datetime-local" name="end"><br>
 						<input type="submit" value="Schedule Task">
 					</form>
+				</div>
+			</div>
+		</div>
+		<div id="settings_popup" class="shadow">
+			<div class="modal-content">
+				<div class="title">
+					<span id="close_settings_popup" class="close">&times;</span>
+					<h2>Settings</h2>
+				</div>
+				<div class="popup">
+				    <button class="js-push-button" disabled>
+          				Enable Notifications
+        			</button>
+<!--         			<h2>cURL Command to Send Push</h2>
+				    <div class="js-curl-command"></div>
+ -->
+				    <script src="/resources/settings/config.js"></script>
+				    <script src="/resources/settings/main.js"></script>
 				</div>
 			</div>
 		</div>

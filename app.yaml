@@ -12,6 +12,10 @@ handlers:
 - url: /resources
   static_dir: static_folder
 
+- url: /notifications-service-worker\.js
+  static_files: notifications-service-worker.js
+  upload: notifications-service-worker\.js
+
 - url: /.+
   script: main.app
   login: required

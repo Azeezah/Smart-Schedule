@@ -108,14 +108,8 @@ class showTasksHandler(webapp2.RequestHandler):
 		}))
 		#todo: separate >20 tasks into multiple pages
 
-class settingsHandler(webapp2.RequestHandler):
-	def get(self):
-		template = jinja_environment.get_template('settings.html')
-		self.response.write(template.render())
-
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/createTask', createTaskHandler),
     ('/schedule', showTasksHandler),
-    ('/settings', settingsHandler)
 ], debug=True)
